@@ -14,7 +14,7 @@ if __name__ == '__main__':
     while True:
         userInput = input(f"What would you like? ({menu.find_items()}): ")
 
-        if userInput in ["quit","exit"]:
+        if userInput in ["quit","exit","off"]:
             print("Have a nice day!")
             sys.exit()
 
