@@ -1,58 +1,18 @@
-from coffee_data import *
+##transpose to OOP
+from menu import *
+from coffee_maker import CoffeeMaker
+from money_machine import MoneyMachine
 import sys
-
-
-
-def check_resources(name):
-    # check the available resource -> negative == return false
-    for resource in MENU[name]["ingredients"]:
-        checkResource = resources[resource] - MENU[name]["ingredients"][resource]
-        if checkResource < 0:
-            return False, resource
-    return True, None
-
-def process_transaction(name, total_money):
-    # perform a check on resources -> return true or false
-    isResourceAvailable, missingResoure = check_resources(name)
-
-    if isResourceAvailable == False:
-        print("sorry, there is not enough %s" % missingResoure)
-    else:
-        print("Please insert coins.")
-        quarters = int(input("How many quarters?: "))*0.25
-        dimes = int(input("How many dimes?: "))*0.10
-        nickles = int(input("How many nickles?: "))*0.05
-        pennies = int(input("How many pennies?: "))*0.01
-        total_money_input = quarters+dimes+nickles+pennies
-
-        if total_money_input < MENU[name]["cost"]:
-            print("Sorry that's not enough money. Money refunded.")
-        else:
-            # update resource and caluclate the refunded money
-            for resource in MENU[name]["ingredients"]:
-                resources[resource] -= MENU[name]["ingredients"][resource]
-
-            refunded_value = round((total_money_input - MENU[name]["cost"]),2)
-
-            if refunded_value == 0:
-                print("Here is your %s ☕. Enjoy!" % name)
-                total_money += MENU[name]["cost"]
-                total_money = round(total_money,2)
-                return total_money
-            elif refunded_value > 0:
-                print("Here is $%s in change" % refunded_value)
-                print("Here is your %s ☕. Enjoy!" % name)
-                total_money += MENU[name]["cost"]
-                total_money = round(total_money,2)
-                return total_money
-
-
 if __name__ == '__main__':
-    # start the coffee machine with total money
-    total_money = 100
+
+    #instantiate the objects
+    menu = Menu()
+    coffee_engine = CoffeeMaker()
+    money_engine = MoneyMachine()
+
 
     while True:
-        userInput = input("What would you like? (espresso/latte/cappuccino): ")
+        userInput = input(f"What would you like? ({menu.find_items()}): ")
 
         if userInput in ["quit","exit"]:
             print("Have a nice day!")
@@ -60,17 +20,17 @@ if __name__ == '__main__':
 
         # report function
         elif userInput == "report":
-            for resource in resources:
-                if resource == "coffee":
-                    print("%s : %sg" % (resource.capitalize(), resources[resource]))
-                else:
-                    print("%s : %sml" % (resource.capitalize(), resources[resource]))
-            print("%s : $%s" % ("Money", total_money))
+            coffee_engine.report()
+            money_engine.report()
 
-        # report function
-        elif userInput in ["espresso","latte","cappuccino"]:
-            # update the machine remaining balance
-            money = process_transaction(userInput, total_money)
-            total_money=money
+        # order function
         else:
-            print("Invalid Input!")
+            # get the user order
+            # first check to see if the machine can make
+            order = menu.find_drink(userInput)
+            can_make = coffee_engine.is_resource_sufficient(order)
+            if can_make:
+                # if we can make it, then ask the user to input the coins for processing
+                payment_made = money_engine.make_payment(order.cost)
+                if payment_made:
+                    coffee_engine.make_coffee(order)
