@@ -1,7 +1,8 @@
 """Simple Snake Game"""
 from turtle import Turtle, Screen
 from snake import Snake
-
+from food import Food
+from score_board import ScoreBoard
 # for animation purposes
 import time
 
@@ -15,8 +16,11 @@ if __name__ == "__main__":
     screen.tracer(0)
 
     snake = Snake() # OOP build the snake
+    food = Food()   # OOP generate a food item
+    score_board = ScoreBoard()  #OOP generate the score
 
     # enable event listener
+    # give the snake a way to move according to keystroke
     screen.listen()
     screen.onkey(snake.up, "Up")
     screen.onkey(snake.down, "Down")
@@ -29,7 +33,25 @@ if __name__ == "__main__":
         # only update when every segment is moved forward
         screen.update()
         time.sleep(0.1)
-        # move the snake forward
-        snake.move()
+        snake.move()    # move the snake forward
+
+        # detect collision using distances between the snake head and the food item
+        # add to the snake if the snake eat the food
+        if snake.head.distance(food) < 10:
+            food.refresh()
+            score_board.update_score()
+            snake.extend()
+
+        # detect collision with wall (our board is 600 x 600) or +/- 300 each and snake has a side of 20
+        if snake.head.xcor() > 290 or snake.head.xcor() < -290 or snake.head.ycor() > 290 or snake.head.ycor() < -290:
+            score_board.game_over()
+            game_is_on = False
+
+        # detect the collision with tail
+        for segment in snake.segments[1:]:
+            if snake.head.distance(segment) < 5:
+                score_board.game_over()
+                game_is_on = False
+
 
     screen.exitonclick()
