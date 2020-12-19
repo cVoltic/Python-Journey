@@ -9,7 +9,7 @@ import time
 if __name__ == "__main__":
     # instantiate a screen class, exit on click
     screen = Screen()
-    screen.setup(width=600,height=600)
+    screen.setup(width=600, height=600)
     screen.bgcolor("black")
     screen.title("Snake Game")
     #turn the animation off initially
@@ -37,19 +37,19 @@ if __name__ == "__main__":
 
         # detect collision using distances between the snake head and the food item
         # add to the snake if the snake eat the food
-        if snake.head.distance(food) < 10:
+        if snake.head.distance(food) < 15:
             food.refresh()
             score_board.update_score()
             snake.extend()
 
         # detect collision with wall (our board is 600 x 600) or +/- 300 each and snake has a side of 20
-        if snake.head.xcor() > 290 or snake.head.xcor() < -290 or snake.head.ycor() > 290 or snake.head.ycor() < -290:
+        if snake.head.xcor() > 280 or snake.head.xcor() < -300 or snake.head.ycor() > 300 or snake.head.ycor() < -280:
             score_board.game_over()
             game_is_on = False
 
         # detect the collision with tail
         for segment in snake.segments[1:]:
-            if snake.head.distance(segment) < 5:
+            if snake.head.distance(segment) < 10:
                 score_board.game_over()
                 game_is_on = False
 

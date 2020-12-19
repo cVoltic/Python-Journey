@@ -2,8 +2,8 @@
 from turtle import Turtle
 
 #Global starting postion
-STARTING_POSITION = [(0, 0), (-10, 0), (-20, 0)]
-MOVE_DISTANCE = 10
+STARTING_POSITION = [(0, 0), (-20, 0), (-40, 0)]
+MOVE_DISTANCE = 20
 
 #Snake should not be able to move back and forth on itself
 UP = 90
@@ -23,7 +23,6 @@ class Snake:
         for position in STARTING_POSITION:
             segment = Turtle(shape='square')
             segment.color("white")
-            segment.shapesize(stretch_len=0.5, stretch_wid=0.5)
             segment.penup()
             segment.goto(position)
             self.segments.append(segment)
@@ -60,7 +59,6 @@ class Snake:
     def add_segment(self, position):
         segment = Turtle(shape='square')
         segment.color("white")
-        segment.shapesize(stretch_len=0.5, stretch_wid=0.5)
         segment.penup()
         segment.goto(position)
         self.segments.append(segment)
