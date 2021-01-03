@@ -63,5 +63,18 @@ class Snake:
         segment.goto(position)
         self.segments.append(segment)
 
+    # reset the snake when it dies
+    # reinit the snake at origin
+    def reset(self):
+        # before we clear the snake, we need to move the rest of
+        # the snake off screen
+        for seg in self.segments:
+            seg.goto(1000,1000)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
+        self.tail = self.segments[-1]
+
+
     def extend(self):
         self.add_segment(self.tail.position())

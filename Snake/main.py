@@ -39,19 +39,18 @@ if __name__ == "__main__":
         # add to the snake if the snake eat the food
         if snake.head.distance(food) < 15:
             food.refresh()
-            score_board.update_score()
+            score_board.increase_score()
             snake.extend()
 
         # detect collision with wall (our board is 600 x 600) or +/- 300 each and snake has a side of 20
         if snake.head.xcor() > 280 or snake.head.xcor() < -300 or snake.head.ycor() > 300 or snake.head.ycor() < -280:
-            score_board.game_over()
-            game_is_on = False
+            score_board.reset()
+            snake.reset()
 
         # detect the collision with tail
         for segment in snake.segments[1:]:
             if snake.head.distance(segment) < 10:
-                score_board.game_over()
-                game_is_on = False
-
+                score_board.reset()
+                snake.reset()
 
     screen.exitonclick()
